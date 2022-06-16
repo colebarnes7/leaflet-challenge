@@ -1,4 +1,4 @@
-var link = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
+var link = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2022-06-08&endtime=2022-06-16&maxlongitude=-69.52148437&minlongitude=-123.83789062&maxlatitude=48.74894534&minlatitude=25.16517337";
 
 d3.json(link).then(function (data) {
     console.log(data);
