@@ -33,10 +33,11 @@ function createFeatures(earthquakeData) {
                 color = "red";
             };
             markerOptions = {
+                weight: 1.5,
                 fillOpacity: 0.75,
                 color: "black",
                 fillColor: color,
-                radius: (feature.properties.mag)**2
+                radius: (((feature.properties.mag)+2)**2)/2
             };
             return new L.circleMarker([feature.geometry.coordinates[1], feature.geometry.coordinates[0]], markerOptions);
         }
@@ -70,8 +71,8 @@ function createMap(earthquakes) {
   
     // Create our map, giving it the streetmap and earthquakes layers to display on load.
     var myMap = L.map("map", {
-        center: [37.09, -95.71],
-        zoom: 5,
+        center: [37.09, -105],
+        zoom: 4.5,
         layers: [street, earthquakes]
     });
   
@@ -81,4 +82,24 @@ function createMap(earthquakes) {
     L.control.layers(baseMaps, overlayMaps, {
         collapsed: false
     }).addTo(myMap);
+
+    // Setting up the legend for the map
+    var legend = L.control({position: 'bottomright'});
+
+    legend.onAdd = function () {
+    
+        var div = L.DomUtil.create('div', 'info legend'),
+            magnitudes = ["<0", "0-15", "15-30", ">30"],
+            colors = ["green", "yellow", "orange", "red"];
+    
+        div.innerHTML = '<h4>Depth (km)</h4>'
+        for (var i = 0; i < magnitudes.length; i++) {
+            div.innerHTML +=
+                '<i style="background:' + colors[i] + '"></i> ' +
+                magnitudes[i] + '<br>';
+        
+        };
+        return div;
+    };
+    legend.addTo(myMap);
 };
