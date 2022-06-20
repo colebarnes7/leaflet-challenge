@@ -10,25 +10,6 @@ function createFeatures(earthquakeData) {
     // Define a function that we want to run once for each feature in the features array.
     // Give each feature a popup that describes the place and time of the earthquake.
     function onEachFeature(feature, layer) {
-        // var color = "";
-        // if (feature.geometry.coordinates[2] < 0){
-        //     color = "green"; 
-        // }
-        // else if (feature.geometry.coordinates[2] < 15) {
-        //     color = "yellow";
-        // }
-        // else if (feature.geometry.coordinates[2] < 30) {
-        //     color = "orange";
-        // }
-        // else {
-        //     color = "red";
-        // };
-        // layer.circle([feature.geometry.coordinates[0], feature.geometry.coordinates[1]], {
-        //     fillOpacity: 0.75,
-        //     color: "black",
-        //     fillColor: color,
-        //     radius: feature.properties.mag
-        // });
         layer.bindPopup(`<h3>${feature.properties.place}</h3><hr><p>${new Date(feature.properties.time)}</p>
             <p>Magnitude: ${feature.properties.mag}</p><p>Depth: ${feature.geometry.coordinates[2]} km</p>`);
     };
@@ -36,7 +17,29 @@ function createFeatures(earthquakeData) {
     // Create a GeoJSON layer that contains the features array on the earthquakeData object.
     // Run the onEachFeature function once for each piece of data in the array.
     var earthquakes = L.geoJSON(earthquakeData, {
-        onEachFeature: onEachFeature
+        onEachFeature: onEachFeature,
+        pointToLayer: function (feature) {
+            var color = "";
+            if (feature.geometry.coordinates[2] < 0){
+                color = "green"; 
+            }
+            else if (feature.geometry.coordinates[2] < 15) {
+                color = "yellow";
+            }
+            else if (feature.geometry.coordinates[2] < 30) {
+                color = "orange";
+            }
+            else {
+                color = "red";
+            };
+            markerOptions = {
+                fillOpacity: 0.75,
+                color: "black",
+                fillColor: color,
+                radius: (feature.properties.mag)**2
+            };
+            return new L.circleMarker([feature.geometry.coordinates[1], feature.geometry.coordinates[0]], markerOptions);
+        }
     });
   
     // Send our earthquakes layer to the createMap function/
